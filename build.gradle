@@ -1,0 +1,32 @@
+plugins {
+    id "java"
+    id "io.freefair.lombok" version "6.3.0"
+}
+// apply plugin: 'java'
+// apply plugin: 'idea'
+
+sourceCompatibility = 17
+
+repositories {
+    mavenLocal()
+    maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+    mavenCentral()
+}
+
+ext {
+    springVersion = "2.7.2"
+}
+
+dependencies {
+    // Spring
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: "${springVersion}"
+    // HuTool
+    implementation group: 'cn.hutool', name: 'hutool-core', version: '5.8.5'
+    // Lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    // Slf4j
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.32'
+    // JUnit-4
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+}
