@@ -1,4 +1,4 @@
-package cn.zxf.dao;
+package cn.zxf.spring.jdbc;
 
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;

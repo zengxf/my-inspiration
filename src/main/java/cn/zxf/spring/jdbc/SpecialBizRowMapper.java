@@ -1,4 +1,4 @@
-package cn.zxf.dao;
+package cn.zxf.spring.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +32,7 @@ public class SpecialBizRowMapper<T> extends BeanPropertyRowMapper<T> {
         // 特殊业务字段处理
         Map<String, PropertyDescriptor> mappedFields;
         try {
-            Field mappedFieldsField = this.getClass().getSuperclass().getDeclaredField("mappedFields");
+            Field mappedFieldsField = BeanPropertyRowMapper.class.getDeclaredField("mappedFields");
             mappedFieldsField.setAccessible(true);
             mappedFields = (Map<String, PropertyDescriptor>) mappedFieldsField.get(this);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -80,6 +80,7 @@ public class SpecialBizRowMapper<T> extends BeanPropertyRowMapper<T> {
     }
 
     /*** 特殊业务字段转换：_amt、_cnt 后缀加 _1d */
+    @Deprecated(forRemoval = true, since = "仅参考")
     protected String specialSuffixName(String name) {
         if (!StringUtils.hasLength(name)) {
             return "";

@@ -17,6 +17,7 @@ public class UserVo {
 
     private String id;
     private Integer age;
+    private String level1Name;
 
     public static List<UserVo> ofList3() {
         return IntStream.rangeClosed(1, 3)
