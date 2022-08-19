@@ -66,7 +66,7 @@ public class RedisLockAspect extends AbstractPointcutAdvisor implements MethodIn
     }
 
     private Lock getLock(String lockKey) {
-        // FIX: 使用 redisson 返回 RLock
+        // TODO: 使用 redisson 返回 RLock
         return new ReentrantLock();
     }
 

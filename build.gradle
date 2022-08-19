@@ -2,8 +2,6 @@ plugins {
     id "java"
     id "io.freefair.lombok" version "6.3.0"
 }
-// apply plugin: 'java'
-// apply plugin: 'idea'
 
 sourceCompatibility = 17
 
@@ -14,12 +12,12 @@ repositories {
 }
 
 ext {
-    springVersion = "2.7.2"
+    springBootVersion = "2.7.2"
 }
 
 dependencies {
     // Spring
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: "${springVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: "${springBootVersion}"
     // HuTool
     implementation group: 'cn.hutool', name: 'hutool-core', version: '5.8.5'
     // Lombok
