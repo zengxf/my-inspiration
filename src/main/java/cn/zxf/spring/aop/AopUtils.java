@@ -1,5 +1,6 @@
 package cn.zxf.spring.aop;
 
+import org.springframework.aop.framework.AopContext;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.autoproxy.AutoProxyUtils;
 import org.springframework.aop.scope.ScopedObject;
@@ -18,6 +19,12 @@ public class AopUtils {
         Class<?> clazz = AopProxyUtils.ultimateTargetClass(proxyBean);
         return clazz;
     }
+
+    /*** 获取当前代理类 */
+    public static <T> T currentProxy() {
+        return (T) AopContext.currentProxy();
+    }
+
 
     /**
      * 判断是不是目标 bean 名
