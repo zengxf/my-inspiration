@@ -28,4 +28,6 @@ target
 
 *.md5
 
+__temp__.md
+
 logs
