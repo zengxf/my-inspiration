@@ -18,6 +18,7 @@ ext {
 dependencies {
     // Spring
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
     // HuTool
     implementation group: 'cn.hutool', name: 'hutool-core', version: '5.8.5'
     // Lombok

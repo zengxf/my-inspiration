@@ -1,7 +1,7 @@
 package cn.zxf.common;
 
 /**
- * 应用异常封装
+ * 应用异常
  * <p/>
  * Created by ZXFeng on 2024/4/23
  */
