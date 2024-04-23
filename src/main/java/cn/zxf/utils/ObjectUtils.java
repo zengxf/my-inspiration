@@ -1,6 +1,6 @@
 package cn.zxf.utils;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 对象帮助类
@@ -10,12 +10,9 @@ import cn.hutool.core.util.StrUtil;
 public class ObjectUtils {
 
     /*** 判断是 null 或为空 */
+    @Deprecated(since = "可直接用 HuTool 替换")
     public static boolean isNullOrBlank(Object obj) {
-        if (obj == null)
-            return true;
-        if (obj instanceof CharSequence)
-            return StrUtil.isBlank((CharSequence) obj);
-        return false;
+        return ObjectUtil.isEmpty(obj);
     }
 
 }

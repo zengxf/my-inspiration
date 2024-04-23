@@ -1,69 +1,81 @@
 package cn.zxf.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.zxf.common.AppErrCodeConstant;
+import cn.zxf.common.ApplicationException;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 集合流的帮助类
  * <br/>
  * Created by ZXFeng on 2022/8/15.
  */
-public class CollStreamUtils {
+public class CollStreamUtils implements AppErrCodeConstant {
 
-    public static <K, T> Map<K, T> listToMap(List<T> list, Function<T, K> kFun) {
+    /*** 列表分组 */
+    public static <K, T> Map<K, List<T>> groupMap(Collection<T> list, Function<T, K> keyFun) {
         if (CollectionUtil.isEmpty(list))
             return new HashMap<>();
         return list.stream()
                 .filter(Objects::nonNull)
                 .collect(
-                        Collectors.toMap(
-                                kFun, Function.identity(),
-                                mergeFunctionForMap(),
-                                LinkedHashMap::new
-                        )
+                        Collectors.groupingBy(keyFun, LinkedHashMap::new, Collectors.toList())
                 );
     }
 
-    public static <K, V, T> Map<K, V> listToMap(List<T> list, Function<T, K> kFun, Function<T, V> vFun) {
-        if (CollectionUtil.isEmpty(list))
-            return new HashMap<>();
-        return list.stream()
-                .filter(item -> item != null && vFun.apply(item) != null)
-                .collect(
-                        Collectors.toMap(
-                                kFun, vFun,
-                                mergeFunctionForMap(),
-                                LinkedHashMap::new
-                        )
-                );
-    }
-
-    public static <K, T> Map<K, List<T>> groupMap(List<T> list, Function<T, K> kFun) {
+    /*** 列表转换成 Map */
+    public static <K, T> Map<K, T> toMap(Collection<T> list, Function<T, K> keyFun) {
         if (CollectionUtil.isEmpty(list))
             return new HashMap<>();
         return list.stream()
                 .filter(Objects::nonNull)
                 .collect(
-                        Collectors.groupingBy(
-                                kFun,
-                                LinkedHashMap::new,
-                                Collectors.toList()
-                        )
+                        Collectors.toMap(keyFun, Function.identity())
                 );
     }
 
-    public static <V> BinaryOperator<V> mergeFunctionForMap() {
-        BinaryOperator<V> mergeFunction = (u, v) -> {
-            throw new IllegalStateException(String.format("存在重复记录 [%s]", u));
-        };
-        return mergeFunction;
+    /*** 列表转换成 Map (重复时只取第一个) */
+    public static <K, T> Map<K, T> toDistinctMap(Collection<T> list, Function<T, K> keyFun) {
+        if (CollectionUtil.isEmpty(list))
+            return new HashMap<>();
+        return list.stream()
+                .filter(Objects::nonNull)
+                .collect(
+                        Collectors.toMap(keyFun, Function.identity(), (v1, v2) -> v1)
+                );
     }
 
-    public static <T, I> List<I> listTransform(List<T> list, Function<T, I> fun) {
+    /*** 列表转换成 Map */
+    public static <T, K, V> Map<K, V> toMap(Collection<T> list, Function<T, K> keyFun, Function<T, V> valueFun) {
+        if (CollectionUtil.isEmpty(list))
+            return new HashMap<>();
+        return list.stream()
+                .filter(Objects::nonNull)
+                .collect(
+                        Collectors.toMap(keyFun, valueFun)
+                );
+    }
+
+    /*** 列表类型转换成 Set */
+    public static <T, V> Set<V> toSet(Collection<T> list, Function<T, V> fun) {
+        if (CollectionUtil.isEmpty(list))
+            return new HashSet<>();
+        return list.stream()
+                .filter(Objects::nonNull)
+                .map(fun)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
+    /*** 列表类型转换 */
+    public static <T, V> List<V> map(Collection<T> list, Function<T, V> fun) {
         if (CollectionUtil.isEmpty(list))
             return new ArrayList<>();
         return list.stream()
@@ -73,14 +85,73 @@ public class CollStreamUtils {
                 .collect(Collectors.toList());
     }
 
-    public static <T, S> Set<S> listToSet(List<T> list, Function<T, S> fun) {
+    /*** 去重 */
+    public static <T, V> List<V> distinct(Collection<T> list, Function<T, V> fun) {
         if (CollectionUtil.isEmpty(list))
-            return new HashSet<>();
+            return new ArrayList<>();
         return list.stream()
                 .filter(Objects::nonNull)
                 .map(fun)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    /*** 列表过滤 */
+    public static <T> List<T> filter(List<T> list, Predicate<T> predicate) {
+        if (CollectionUtil.isEmpty(list))
+            return new ArrayList<>();
+        return list.stream()
+                .filter(Objects::nonNull)
+                .filter(predicate)
+                .collect(Collectors.toList());
+    }
+
+    /*** 列表判断是否存在 */
+    public static <T> boolean exists(List<T> list, Predicate<T> predicate) {
+        if (CollectionUtil.isEmpty(list))
+            return false;
+        return list.stream()
+                .filter(Objects::nonNull)
+                .anyMatch(predicate);
+    }
+
+    /*** 找到独有的一个 (@Nullable) */
+    public static <T> T findOne(List<T> list, Predicate<T> predicate) {
+        if (CollectionUtil.isEmpty(list))
+            return null;
+        return list.stream()
+                .filter(Objects::nonNull)
+                .filter(predicate)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /*** 转 Long 数组 */
+    public static <T> Long[] toLongArray(Collection<T> list, Function<T, Long> fun) {
+        if (CollectionUtil.isEmpty(list))
+            return new Long[]{};
+        return list.stream()
+                .filter(Objects::nonNull)
+                .map(fun)
+                .distinct()
+                .filter(Objects::nonNull)
+                .toArray(Long[]::new);
+    }
+
+    /*** 转数组 */
+    public static <T, V> V[] toArray(Collection<T> list, Class<V> clazz, Function<T, V> fun) {
+        List<V> temp = map(list, fun);
+        V[] arr = (V[]) Array.newInstance(clazz, temp.size());
+        return temp.toArray(arr);
+    }
+
+    /*** 查找枚举 */
+    public static <T extends Enum> T ofEnum(Predicate<T> predicate, String notExistErr, T... values) {
+        return Stream.of(values)
+                .filter(predicate)
+                .findFirst()
+                .orElseThrow(() -> new ApplicationException(ENUM_ERR_CODE, notExistErr));
     }
 
 }

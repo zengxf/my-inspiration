@@ -19,7 +19,7 @@ public class CollStreamUtilsTest {
     @Test
     public void listToMap() {
         List<UserVo> list = UserVo.ofList3();
-        Map<String, UserVo> map = CollStreamUtils.listToMap(list, UserVo::getId);
+        Map<String, UserVo> map = CollStreamUtils.toMap(list, UserVo::getId);
         map.forEach((k, v) -> log.info("k: [{}] -> v: [{}]", k, v));
     }
 
