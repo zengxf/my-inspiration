@@ -32,24 +32,7 @@ public class CollStreamUtils implements AppErrCodeConstant {
 
     /*** 列表转换成 Map */
     public static <K, T> Map<K, T> toMap(Collection<T> list, Function<T, K> keyFun) {
-        if (CollectionUtil.isEmpty(list))
-            return new HashMap<>();
-        return list.stream()
-                .filter(Objects::nonNull)
-                .collect(
-                        Collectors.toMap(keyFun, Function.identity())
-                );
-    }
-
-    /*** 列表转换成 Map (重复时只取第一个) */
-    public static <K, T> Map<K, T> toDistinctMap(Collection<T> list, Function<T, K> keyFun) {
-        if (CollectionUtil.isEmpty(list))
-            return new HashMap<>();
-        return list.stream()
-                .filter(Objects::nonNull)
-                .collect(
-                        Collectors.toMap(keyFun, Function.identity(), (v1, v2) -> v1)
-                );
+        return toMap(list, keyFun, Function.identity());
     }
 
     /*** 列表转换成 Map */
@@ -60,6 +43,24 @@ public class CollStreamUtils implements AppErrCodeConstant {
                 .filter(Objects::nonNull)
                 .collect(
                         Collectors.toMap(keyFun, valueFun)
+                );
+    }
+
+    /*** 列表转换成 Map (重复时只取第一个) */
+    public static <K, T> Map<K, T> toDistinctMap(Collection<T> list, Function<T, K> keyFun) {
+        return toDistinctMap(list, keyFun, Function.identity());
+    }
+
+    /*** 列表转换成 Map (重复时只取第一个) */
+    public static <T, K, V> Map<K, V> toDistinctMap(
+            Collection<T> list, Function<T, K> keyFun, Function<T, V> valueFun
+    ) {
+        if (CollectionUtil.isEmpty(list))
+            return new HashMap<>();
+        return list.stream()
+                .filter(Objects::nonNull)
+                .collect(
+                        Collectors.toMap(keyFun, valueFun, (v1, v2) -> v1)
                 );
     }
 
@@ -127,6 +128,21 @@ public class CollStreamUtils implements AppErrCodeConstant {
                 .orElse(null);
     }
 
+    /*** 查找枚举 */
+    public static <T extends Enum> T ofEnum(Predicate<T> predicate, String notExistErr, T... values) {
+        return Stream.of(values)
+                .filter(predicate)
+                .findFirst()
+                .orElseThrow(() -> new ApplicationException(ENUM_ERR_CODE, notExistErr));
+    }
+
+    /*** 转数组 */
+    public static <T, V> V[] toArray(Collection<T> list, Class<V> clazz, Function<T, V> fun) {
+        List<V> temp = map(list, fun);
+        V[] arr = (V[]) Array.newInstance(clazz, temp.size());
+        return temp.toArray(arr);
+    }
+
     /*** 转 Long 数组 */
     public static <T> Long[] toLongArray(Collection<T> list, Function<T, Long> fun) {
         if (CollectionUtil.isEmpty(list))
@@ -137,21 +153,6 @@ public class CollStreamUtils implements AppErrCodeConstant {
                 .distinct()
                 .filter(Objects::nonNull)
                 .toArray(Long[]::new);
-    }
-
-    /*** 转数组 */
-    public static <T, V> V[] toArray(Collection<T> list, Class<V> clazz, Function<T, V> fun) {
-        List<V> temp = map(list, fun);
-        V[] arr = (V[]) Array.newInstance(clazz, temp.size());
-        return temp.toArray(arr);
-    }
-
-    /*** 查找枚举 */
-    public static <T extends Enum> T ofEnum(Predicate<T> predicate, String notExistErr, T... values) {
-        return Stream.of(values)
-                .filter(predicate)
-                .findFirst()
-                .orElseThrow(() -> new ApplicationException(ENUM_ERR_CODE, notExistErr));
     }
 
 }
