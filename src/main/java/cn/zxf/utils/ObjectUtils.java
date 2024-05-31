@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
  * <br/>
  * Created by ZXFeng on  2022/7/1.
  */
+@Deprecated(since = "可直接用 HuTool -> ObjectUtil 替换")
 public class ObjectUtils {
 
     /*** 判断是 null 或为空 */

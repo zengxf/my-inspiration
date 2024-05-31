@@ -4,9 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.zxf.common.AppErrCodeConstant;
 import cn.zxf.common.ApplicationException;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -134,25 +132,6 @@ public class CollStreamUtils implements AppErrCodeConstant {
                 .filter(predicate)
                 .findFirst()
                 .orElseThrow(() -> new ApplicationException(ENUM_ERR_CODE, notExistErr));
-    }
-
-    /*** 转数组 */
-    public static <T, V> V[] toArray(Collection<T> list, Class<V> clazz, Function<T, V> fun) {
-        List<V> temp = map(list, fun);
-        V[] arr = (V[]) Array.newInstance(clazz, temp.size());
-        return temp.toArray(arr);
-    }
-
-    /*** 转 Long 数组 */
-    public static <T> Long[] toLongArray(Collection<T> list, Function<T, Long> fun) {
-        if (CollectionUtil.isEmpty(list))
-            return new Long[]{};
-        return list.stream()
-                .filter(Objects::nonNull)
-                .map(fun)
-                .distinct()
-                .filter(Objects::nonNull)
-                .toArray(Long[]::new);
     }
 
 }
