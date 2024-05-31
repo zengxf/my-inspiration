@@ -53,18 +53,17 @@ public class ListUtils {
 
     /*** 数组转换成 List */
     public static <T> List<T> toList(T... arr) {
-        if (arr == null || arr.length == 0) {
+        if (arr == null || arr.length == 0)
             return new ArrayList<>();
-        }
         return Stream.of(arr)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     /*** 转数组 */
-    public static <T, V> V[] toArray(Collection<T> list, Class<V> clazz, Function<T, V> fun) {
+    public static <T, V> V[] toArray(Collection<T> list, Class<V> vClass, Function<T, V> fun) {
         List<V> temp = CollStreamUtils.map(list, fun);
-        V[] arr = (V[]) Array.newInstance(clazz, temp.size());
+        V[] arr = (V[]) Array.newInstance(vClass, temp.size());
         return temp.toArray(arr);
     }
 
