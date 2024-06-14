@@ -13,7 +13,8 @@ import java.util.Map;
 public class BeanUtils {
 
     /**
-     * 根据特定注解获取 bean Map。<br/>
+     * 根据特定注解获取 bean Map。
+     * <br/>
      * 示例：
      * <pre>
      * Map<String, Object> beanMap = BeanUtils.getBeanMap(applicationContext, ComponentScan.class);
