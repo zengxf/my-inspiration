@@ -152,13 +152,13 @@ public class DecimalUtils {
         return v1.divide(v2, DEF_SCALE, RoundingMode.HALF_UP);
     }
 
-    /*** 改成 2 位小数 */
+    /*** 保留 2 位小数 */
     public static BigDecimal resetScale2(BigDecimal value) {
         AssertUtils.notNull(value, "要转换的值不能为空");
         return value.setScale(SCALE2, MODE);
     }
 
-    /*** 改成 4 位小数 */
+    /*** 保留 4 位小数 */
     public static BigDecimal resetScale4(BigDecimal value) {
         AssertUtils.notNull(value, "要转换的值不能为空");
         return value.setScale(SCALE4, MODE);
