@@ -1,6 +1,6 @@
 package cn.zxf.spring.jdbc;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -26,7 +26,7 @@ public abstract class BaseDao {
     protected long findTotal(String sql, List<Object> argList) {
         this.logDebug("findTotal", sql, argList);
         Object[] args = {};
-        if (CollectionUtil.isNotEmpty(argList)) {
+        if (CollUtil.isNotEmpty(argList)) {
             args = argList.toArray();
         }
         return jdbc.queryForObject(sql, Long.class, args);
@@ -37,7 +37,11 @@ public abstract class BaseDao {
         return this.findList(sql, argList, BeanPropertyRowMapper.newInstance(clazz));
     }
 
-    /*** 查询结果集（有特殊业务字段） */
+    /**
+     * 查询结果集（有特殊业务字段）。
+     * <p/>
+     * 转换器：{@link SpecialBizRowMapper}
+     */
     protected <T> List<T> findSpecialList(String sql, List<Object> argList, Class<T> clazz) {
         return this.findList(sql, argList, SpecialBizRowMapper.newInstance(clazz));
     }
@@ -46,7 +50,7 @@ public abstract class BaseDao {
     private <T> List<T> findList(String sql, List<Object> argList, RowMapper<T> rowMapper) {
         this.logDebug("findList", sql, argList);
         Object[] args = {};
-        if (CollectionUtil.isNotEmpty(argList)) {
+        if (CollUtil.isNotEmpty(argList)) {
             args = argList.toArray();
         }
         return jdbc.query(sql, args, rowMapper);
@@ -61,13 +65,13 @@ public abstract class BaseDao {
     private <T> T findOne(String sql, List<Object> argList, RowMapper<T> rowMapper) {
         this.logDebug("findOne", sql, argList);
         Object[] args = {};
-        if (CollectionUtil.isNotEmpty(argList)) {
+        if (CollUtil.isNotEmpty(argList)) {
             args = argList.toArray();
         }
         // 优化：指定 List 容量，避免内存占用
         RowMapperResultSetExtractor<T> extractor = new RowMapperResultSetExtractor<>(rowMapper, 1);
         List<T> list = jdbc.query(sql, extractor, args);
-        return CollectionUtil.getFirst(list);
+        return CollUtil.getFirst(list);
     }
 
     // 打印 SQL 和参数

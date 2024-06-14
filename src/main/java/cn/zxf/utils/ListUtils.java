@@ -31,6 +31,9 @@ public class ListUtils {
     public static List<String> split(String value, String delimiter) {
         if (StrUtil.isEmpty(value))
             return CollectionUtil.newArrayList();
+
+        value = value.trim();   // 去空格
+
         return Stream.of(value.split("\\s*" + delimiter + "\\s*"))
                 .filter(StrUtil::isNotEmpty)
                 .collect(Collectors.toList());

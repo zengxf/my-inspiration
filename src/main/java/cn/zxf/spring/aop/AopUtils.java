@@ -49,8 +49,9 @@ public class AopUtils {
             try {
                 String targetBeanName = ScopedProxyUtils.getTargetBeanName(beanName);
                 Class<?> targetClass = AutoProxyUtils.determineTargetClass(beanFactory, targetBeanName);
-                if (targetClass != null)
+                if (targetClass != null) {
                     type = targetClass;
+                }
             } catch (Throwable ignored) {
             }
         }
