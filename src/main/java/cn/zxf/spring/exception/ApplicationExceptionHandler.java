@@ -1,11 +1,11 @@
 package cn.zxf.spring.exception;
 
 import cn.zxf.common.ApplicationException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -18,7 +18,7 @@ public class ApplicationExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(ApplicationException.class)
-    public Map<String, Object> appErrorHandler(HttpServletRequest req, ApplicationException e) {
+    public Map<String, Object> errorHandle(HttpServletRequest req, ApplicationException e) {
         return Map.of(
                 "errorCode", e.code,
                 "errorMessage", e.getMessage(),
