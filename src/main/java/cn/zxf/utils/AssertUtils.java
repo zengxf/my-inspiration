@@ -3,8 +3,8 @@ package cn.zxf.utils;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.zxf.common.AppErrCodeConstant;
-import cn.zxf.common.ApplicationException;
+import cn.zxf.common.ErrCodeConstant;
+import cn.zxf.common.BizException;
 
 import java.time.YearMonth;
 import java.util.Collection;
@@ -16,14 +16,14 @@ import java.util.Collection;
  * <p/>
  * Created by ZXFeng on 2024/4/23
  */
-public class AssertUtils implements AppErrCodeConstant {
+public class AssertUtils implements ErrCodeConstant {
 
     /*** 对象不能为空 */
     public static void notNull(Object obj, String msgFmt, Object... args) {
         if (obj != null)
             return;
         String msg = fmtMsg(msgFmt, args);
-        throw new ApplicationException(ASSERT_ERR_CODE, msg);
+        throw new BizException(ASSERT_ERR_CODE, msg);
     }
 
     /*** 字符串不能为空 */
@@ -31,7 +31,7 @@ public class AssertUtils implements AppErrCodeConstant {
         if (StrUtil.isNotEmpty(str))
             return;
         String msg = fmtMsg(msgFmt, args);
-        throw new ApplicationException(ASSERT_ERR_CODE, msg);
+        throw new BizException(ASSERT_ERR_CODE, msg);
     }
 
     /*** 集合不能为空 */
@@ -39,14 +39,14 @@ public class AssertUtils implements AppErrCodeConstant {
         if (CollectionUtil.isNotEmpty(collection))
             return;
         String msg = fmtMsg(msgFmt, args);
-        throw new ApplicationException(ASSERT_ERR_CODE, msg);
+        throw new BizException(ASSERT_ERR_CODE, msg);
     }
 
     /*** value 不能在 base 后面 */
     public static void notAfter(YearMonth value, YearMonth base, String msgFmt, Object... args) {
         if (value.isAfter(base)) {
             String msg = fmtMsg(msgFmt, args);
-            throw new ApplicationException(ASSERT_ERR_CODE, msg);
+            throw new BizException(ASSERT_ERR_CODE, msg);
         }
     }
 
@@ -55,7 +55,7 @@ public class AssertUtils implements AppErrCodeConstant {
         if (!cond)
             return;
         String msg = fmtMsg(msgFmt, args);
-        throw new ApplicationException(ASSERT_ERR_CODE, msg);
+        throw new BizException(ASSERT_ERR_CODE, msg);
     }
 
     /*** cond 必须为 true */
@@ -63,13 +63,13 @@ public class AssertUtils implements AppErrCodeConstant {
         if (cond)
             return;
         String msg = fmtMsg(msgFmt, args);
-        throw new ApplicationException(ASSERT_ERR_CODE, msg);
+        throw new BizException(ASSERT_ERR_CODE, msg);
     }
 
     /*** 执行错误（不应执行到此） */
     public static void exeError(String msgFmt, Object... args) {
         String msg = fmtMsg(msgFmt, args);
-        throw new ApplicationException(ASSERT_ERR_CODE, msg);
+        throw new BizException(ASSERT_ERR_CODE, msg);
     }
 
     // 格式化消息

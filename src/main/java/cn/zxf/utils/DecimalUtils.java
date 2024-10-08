@@ -50,7 +50,7 @@ public class DecimalUtils {
     }
 
     /*** 是否相等 */
-    public static boolean eq(BigDecimal v1, BigDecimal v2) {
+    public static boolean eqNullable(BigDecimal v1, BigDecimal v2) {
         if (v1 == null || v2 == null)
             return v1 == v2;
         return v1.compareTo(v2) == 0;
@@ -58,15 +58,15 @@ public class DecimalUtils {
 
     /*** 是否小于或等于：v1 <= v2 */
     public static boolean le(BigDecimal v1, BigDecimal v2) {
-        AssertUtils.notNull(v1, "V1 不能为空");
-        AssertUtils.notNull(v2, "V2 不能为空");
+        AssertUtils.notNull(v1, "v1 不能为空");
+        AssertUtils.notNull(v2, "v2 不能为空");
         return v1.compareTo(v2) <= 0;
     }
 
     /*** 是否小于：v1 < v2 */
     public static boolean lt(BigDecimal v1, BigDecimal v2) {
-        AssertUtils.notNull(v1, "V1 不能为空");
-        AssertUtils.notNull(v2, "V2 不能为空");
+        AssertUtils.notNull(v1, "v1 不能为空");
+        AssertUtils.notNull(v2, "v2 不能为空");
         return v1.compareTo(v2) < 0;
     }
 
@@ -79,8 +79,8 @@ public class DecimalUtils {
 
     /*** 是否大于：v1 > v2 */
     public static boolean gt(BigDecimal v1, BigDecimal v2) {
-        AssertUtils.notNull(v1, "V1 不能为空");
-        AssertUtils.notNull(v2, "V2 不能为空");
+        AssertUtils.notNull(v1, "v1 不能为空");
+        AssertUtils.notNull(v2, "v2 不能为空");
         return v1.compareTo(v2) > 0;
     }
 
@@ -93,13 +93,16 @@ public class DecimalUtils {
 
     /*** 是否在区间内(包含关系)：min <= v <= max */
     public static boolean between(BigDecimal v, BigDecimal min, BigDecimal max) {
+        AssertUtils.notNull(v, "v 不能为空");
+        AssertUtils.notNull(min, "min 不能为空");
+        AssertUtils.notNull(max, "max 不能为空");
         return ge(v, min) && le(v, max);
     }
 
     // --------------------------
 
     /*** 转换成 double，空值返回 0 */
-    public static double toDouble(BigDecimal value) {
+    public static double toDoubleNullable(BigDecimal value) {
         if (value == null)
             return 0;
         return value.doubleValue();
@@ -118,13 +121,13 @@ public class DecimalUtils {
 
     /*** 字符串转换 */
     public static BigDecimal valueOf(String value) {
-        AssertUtils.notEmpty(value, "要转换的值不能为空");
+        AssertUtils.notEmpty(value, "要转换的 String 值不能为空");
         return new BigDecimal(value);
     }
 
     /*** 从 Double 转换  */
     public static BigDecimal valueOf(Double value) {
-        AssertUtils.notNull(value, "要转换的值不能为空");
+        AssertUtils.notNull(value, "要转换的 Double 值不能为空");
         return BigDecimal.valueOf(value);
     }
 
@@ -135,7 +138,7 @@ public class DecimalUtils {
         return BigDecimal.valueOf(value);
     }
 
-    /*** 计算比差率，保留 2 位小数。公式：(value - ref) / ref * 100 */
+    /*** 计算比(差)率，保留 2 位小数。公式：(value - ref) / ref * 100 */
     public static BigDecimal calcDiffRate(BigDecimal value, BigDecimal ref) {
         AssertUtils.notNull(value, "计算比率的值不能为空");
         AssertUtils.notNull(ref, "计算比率的参考不能为空");
@@ -147,20 +150,20 @@ public class DecimalUtils {
 
     /*** 除法：v1 / v2，默认只返回 2 位小数 */
     public static BigDecimal divide(BigDecimal v1, BigDecimal v2) {
-        AssertUtils.notNull(v1, "V1 不能为空");
-        AssertUtils.notNull(v2, "V2 不能为空");
+        AssertUtils.notNull(v1, "除法 v1 不能为空");
+        AssertUtils.notNull(v2, "除法 v2 不能为空");
         return v1.divide(v2, DEF_SCALE, RoundingMode.HALF_UP);
     }
 
     /*** 保留 2 位小数 */
     public static BigDecimal resetScale2(BigDecimal value) {
-        AssertUtils.notNull(value, "要转换的值不能为空");
+        AssertUtils.notNull(value, "(S2) 要转换的值不能为空");
         return value.setScale(SCALE2, MODE);
     }
 
     /*** 保留 4 位小数 */
     public static BigDecimal resetScale4(BigDecimal value) {
-        AssertUtils.notNull(value, "要转换的值不能为空");
+        AssertUtils.notNull(value, "(S4) 要转换的值不能为空");
         return value.setScale(SCALE4, MODE);
     }
 

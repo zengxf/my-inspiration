@@ -1,8 +1,8 @@
 package cn.zxf.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.zxf.common.AppErrCodeConstant;
-import cn.zxf.common.ApplicationException;
+import cn.zxf.common.ErrCodeConstant;
+import cn.zxf.common.BizException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * <br/>
  * Created by ZXFeng on 2022/8/15.
  */
-public class CollStreamUtils implements AppErrCodeConstant {
+public class CollStreamUtils implements ErrCodeConstant {
 
     /*** 列表分组 */
     public static <K, T> Map<K, List<T>> groupMap(Collection<T> list, Function<T, K> keyFun) {
@@ -131,7 +131,7 @@ public class CollStreamUtils implements AppErrCodeConstant {
         return Stream.of(values)
                 .filter(predicate)
                 .findFirst()
-                .orElseThrow(() -> new ApplicationException(ENUM_ERR_CODE, notExistErr));
+                .orElseThrow(() -> new BizException(ENUM_ERR_CODE, notExistErr));
     }
 
 }
