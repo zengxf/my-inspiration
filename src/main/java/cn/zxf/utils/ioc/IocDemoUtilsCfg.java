@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class IocDemoUtilsCfg {
 
     private boolean encrypt;
-
     private String secret;
 
 }
