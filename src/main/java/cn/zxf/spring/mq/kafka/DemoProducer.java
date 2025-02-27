@@ -2,6 +2,7 @@ package cn.zxf.spring.mq.kafka;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -52,13 +53,15 @@ public class DemoProducer {
      * 回调处理
      */
     private void callbackHandle(CompletableFuture<SendResult<String, String>> future) {
-        // 成功的处理
-        future.handle((result, err) -> {
-            if (err == null) {
-                log.info("=====> 生产者发送消息成功：{}", result.toString());
-            } else {
-                log.error("发送出错", err);
+        // 设置回调处理
+        future.handleAsync((result, err) -> {
+            if (err != null) {
+                log.error("=====> 发送出错！", err);
+                return 0;
             }
+
+            RecordMetadata metadata = result.getRecordMetadata();
+            log.info("=====> 发送成功。topic: [{}], Offset: [{}]", metadata.topic(), metadata.offset());
             return 1;
         });
     }

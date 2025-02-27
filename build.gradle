@@ -13,7 +13,7 @@ repositories {
 
 ext {
     springBootVersion = "3.3.4"
-    slf4jVersion = "2.0.16"
+    springKafkaVersion = "3.3.3"
     hutoolVersion = "5.8.32"
     junitVersion = "4.13.2"
     mockitoVersion = "5.14.1"
@@ -21,17 +21,14 @@ ext {
 
 dependencies {
     // Spring
+    implementation group: "org.springframework.boot", name: "spring-boot-starter-logging", version: "${springBootVersion}"
     implementation group: "org.springframework.boot", name: "spring-boot-starter-jdbc", version: "${springBootVersion}"
     implementation group: "org.springframework.boot", name: "spring-boot-starter-web", version: "${springBootVersion}"
     implementation group: "org.springframework.boot", name: "spring-boot-starter-validation", version: "${springBootVersion}"
-    implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '3.3.3'
+    implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: "${springKafkaVersion}"
 
     // HuTool
     implementation group: "cn.hutool", name: "hutool-core", version: "${hutoolVersion}"
-
-    // Slf4j
-    implementation group: "org.slf4j", name: "slf4j-api", version: "${slf4jVersion}"
-    implementation group: "org.slf4j", name: "slf4j-simple", version: "${slf4jVersion}"
 
     // JUnit-4
     testImplementation group: "junit", name: "junit", version: "${junitVersion}"
