@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
 /**
@@ -18,30 +20,54 @@ public class DemoKafkaConfig {
 
 
     /**
-     * 对方服务
+     * 要监听的服务
      */
     @Value("${spring.kafka.xx.bootstrap-servers}")
-    private String servers;
-
+    private String fromServers;
 
     /**
-     * Kafka 单条消费，手动确认
+     * 要发送消息的目标服务
+     */
+    @Value("${spring.kafka.xx.bootstrap-servers}")
+    private String toServers;
+
+
+    // ------------------------------------
+
+    /**
+     * Kafka 生产者-发送模板
+     */
+    @Bean
+    KafkaTemplate<String, String> demoKafkaTemplate() {
+        ProducerFactory<String, String> producerFactory = ProducerFactoryUtils.producerFactory(toServers);
+        return new KafkaTemplate<>(producerFactory);
+    }
+
+
+    // ------------------------------------
+
+    /**
+     * Kafka 消费者工厂
+     * <p/>
+     * 单条消费，手动确认
      */
     @Bean
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
     demoKafkaFactory() {
-
-        ConcurrentKafkaListenerContainerFactory<String, String> factory
-                = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(this.consumer());
-
-        ConsumerFactoryUtils.setupDef(factory);
-
-        return factory;
+        // ConcurrentKafkaListenerContainerFactory<String, String> factory
+        //         = new ConcurrentKafkaListenerContainerFactory<>();
+        // factory.setConsumerFactory(this.consumer());
+        //
+        // ConsumerFactoryUtils.setupDef(factory);
+        //
+        // return factory;
+        return ConsumerFactoryUtils.consumerFactory(fromServers);
     }
 
     /**
-     * Kafka 批量消费，手动确认
+     * Kafka 消费者工厂
+     * <p/>
+     * 批量消费，手动确认
      */
     @Bean
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
@@ -58,7 +84,7 @@ public class DemoKafkaConfig {
 
 
     private ConsumerFactory<String, String> consumer() {
-        return ConsumerFactoryUtils.buildConsumerFactory(this.servers);
+        return ConsumerFactoryUtils.buildConsumerFactory(this.fromServers);
     }
 
 

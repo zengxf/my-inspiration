@@ -21,6 +21,9 @@ import java.util.Objects;
 public class DemoListener {
 
 
+    /**
+     * 单条消息处理
+     */
     @KafkaListener(
             topics = "xx_topic",
             containerFactory = "demoKafkaFactory",          /** 配置参考：{@link DemoKafkaConfig#demoKafkaFactory} */
@@ -50,6 +53,10 @@ public class DemoListener {
         }
     }
 
+
+    /**
+     * 批量消息处理
+     */
     @KafkaListener(
             topics = "xx_topic",
             containerFactory = "demo2KafkaFactory",         /** 配置参考：{@link DemoKafkaConfig#demo2KafkaFactory} */
@@ -76,10 +83,11 @@ public class DemoListener {
         }
     }
 
+
     /**
      * 处理
      */
-    public void handle(Object msgVO) {
+    private void handle(Object msgVO) {
         if (msgVO == null) {
             return;
         }

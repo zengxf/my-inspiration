@@ -3,8 +3,10 @@ package cn.zxf.spring.mq.kafka;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.HashMap;
@@ -16,6 +18,27 @@ import java.util.Map;
  * ZXF 创建于 2025/2/27
  */
 public class ConsumerFactoryUtils {
+
+    /**
+     * 消费者监听器工厂
+     */
+    // 只是对下面 2 个方法的封装
+    public static KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> consumerFactory(
+            String servers
+    ) {
+        ConsumerFactory<String, String> cf = buildConsumerFactory(servers);
+
+        ConcurrentKafkaListenerContainerFactory<String, String> factory
+                = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(cf);
+
+        setupDef(factory);
+
+        return factory;
+    }
+
+
+    // ---------------------------
 
     /**
      * 构建消费者工厂
@@ -49,6 +72,9 @@ public class ConsumerFactoryUtils {
         factory.getContainerProperties().setPollTimeout(3000);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL); // 设置手动确认
     }
+
+
+    // ---------------------------
 
     /**
      * 设置默认配置。
