@@ -27,6 +27,7 @@ public abstract class BizConfigUtils {
 
     private static final String
             BIZ_CFG_FOLDER = "/biz-config/",
+            SIGN = "obj =",
             COMMENT = "//";
 
 
@@ -36,6 +37,8 @@ public abstract class BizConfigUtils {
         return list.stream()
                 .filter(StrUtil::isNotBlank)
                 .map(line -> {
+                    if (line.contains(SIGN))
+                        return null;
                     if (!line.contains(COMMENT))
                         return line;
                     int index = line.indexOf(COMMENT);
@@ -46,7 +49,7 @@ public abstract class BizConfigUtils {
     }
 
     /*** 读取文件内容 */
-    protected static List<String> readContent(String fileName) {
+    private static List<String> readContent(String fileName) {
         try {
             InputStream in = BizConfigUtils.class.getResourceAsStream(BIZ_CFG_FOLDER + fileName);
             List<String> lines = new ArrayList<>();
