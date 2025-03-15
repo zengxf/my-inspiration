@@ -29,10 +29,10 @@ public class CompletableFutureTest {
                         log.error("出错.", err);
                         return 0;
                     }
-/*
-02-27 16:28:30.301 [ForkJoinPool.commonPool-worker-1] INFO  c.z.m.CompletableFutureTest:21 - 进入 --------------------------
-02-27 16:28:30.819 [ForkJoinPool.commonPool-worker-2] INFO  c.z.m.CompletableFutureTest:34 - 成功. result: [hello]
-*/
+/**
+ 02-27 16:28:30.301 [ForkJoinPool.commonPool-worker-1] INFO  c.z.m.CompletableFutureTest:21 - 进入 --------------------------
+ 02-27 16:28:30.819 [ForkJoinPool.commonPool-worker-2] INFO  c.z.m.CompletableFutureTest:34 - 成功. result: [hello]
+ */
                     log.info("成功. result: [{}]", result);   // 有时同一线程，有时是另一个线程
                     return 1;
                 });
