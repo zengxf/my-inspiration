@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
+ * Enum 转 MySQL 语法
  * <p/>
  * ZXF 创建于 2025/3/15
  */

@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
- * 这个可以理解为具体的某个业务配置帮助类
+ * 配置工具类测试 (这个可以理解为具体的某个业务配置帮助类)
  * <p/>
  * ZXF 创建于 2025/3/15
  */
