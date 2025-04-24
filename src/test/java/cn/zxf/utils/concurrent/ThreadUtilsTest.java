@@ -6,6 +6,9 @@ import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+/**
+ * 测试 {@link ThreadUtils}
+ */
 @Slf4j
 public class ThreadUtilsTest {
 

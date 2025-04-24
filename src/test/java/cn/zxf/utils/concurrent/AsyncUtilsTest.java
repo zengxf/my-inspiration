@@ -6,9 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
- * 可以将此理解为（已优化的）业务类参考
+ * 测试 {@link AsyncUtils}
+ *
+ * <p>
+ * 可以将此理解为（已优化的）业务类参考，
  * <br/>
  * 已优化的业务方法参考：{@link #asyncOptimized()}
+ * </p>
  */
 @Slf4j
 public class AsyncUtilsTest {
@@ -44,7 +48,7 @@ public class AsyncUtilsTest {
 
     /*** 未优化的业务方法-其他操作 */
     private void notOptimizedOtherOp() {
-        ThreadUtil.sleep(500L);
+        ThreadUtil.sleep(500L); // 耗时逻辑
         System.out.println("N--011");
 
         ThreadUtil.sleep(500L);
@@ -90,7 +94,7 @@ public class AsyncUtilsTest {
     /*** 异步优化的业务方法-其他操作 */
     private void asyncOptimizedOtherOp() {
         AsyncUtils.execute(() -> {
-            ThreadUtil.sleep(500L);
+            ThreadUtil.sleep(500L); // 耗时逻辑
             System.out.println("A--A11");
         });
 
