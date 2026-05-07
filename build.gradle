@@ -1,9 +1,15 @@
+// JDK 21, Gradle 9.5.0
+
 plugins {
     id "java"
-    id "io.freefair.lombok" version "8.10"
+    id "io.freefair.lombok" version "9.5.0"
 }
 
-sourceCompatibility = 17
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenLocal()
@@ -12,7 +18,7 @@ repositories {
 }
 
 ext {
-    springBootVersion = "3.3.4"
+    springBootVersion = "3.4.4"
     springKafkaVersion = "3.3.3"
     hutoolVersion = "5.8.32"
     junitVersion = "4.13.2"
