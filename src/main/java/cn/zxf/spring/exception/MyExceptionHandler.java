@@ -2,8 +2,10 @@ package cn.zxf.spring.exception;
 
 import cn.zxf.common.BizException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
@@ -18,6 +20,7 @@ public class MyExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(BizException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> errorHandle(HttpServletRequest req, BizException e) {
         return Map.of(
                 "errorCode", e.code,
