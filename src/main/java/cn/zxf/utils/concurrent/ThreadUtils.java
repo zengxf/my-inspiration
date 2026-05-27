@@ -2,7 +2,9 @@ package cn.zxf.utils.concurrent;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.zxf.spring.model.CurContext;
 import cn.zxf.utils.AssertUtils;
+import cn.zxf.utils.CurContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
@@ -30,9 +32,9 @@ public class ThreadUtils {
      */
     public static Future<?> execAsync(Runnable runnable) {
         AssertUtils.notNull(runnable, "要执行的任务不能为空");
-        // Context passCtx = getContextOrNew();
+        CurContext passCtx = getContextOrNew();
         Runnable wrap = () -> { // 封装下，将上下文传递进去
-            // ContextUtils.set(passCtx);
+            CurContextUtils.set(passCtx);
             runnable.run();
         };
         return defPool().submit(wrap);
@@ -47,9 +49,9 @@ public class ThreadUtils {
     public static void execute(ThreadPoolExecutor pool, Runnable runnable) {
         AssertUtils.notNull(pool, "用于执行任务的线程池不能为空");
         AssertUtils.notNull(runnable, "要执行的任务不能为空");
-        // Context passCtx = getContextOrNew();
+        CurContext passCtx = getContextOrNew();
         Runnable wrap = () -> { // 封装下，将上下文传递进去
-            // ContextUtils.set(passCtx);
+            CurContextUtils.set(passCtx);
             runnable.run();
         };
         pool.execute(wrap);
@@ -64,9 +66,9 @@ public class ThreadUtils {
     public static <V> Future<V> submit(ThreadPoolExecutor pool, Callable<V> callable) {
         AssertUtils.notNull(pool, "用于执行回调任务的线程池不能为空");
         AssertUtils.notNull(callable, "要执行的回调任务不能为空");
-        // Context passCtx = getContextOrNew();
+        CurContext passCtx = getContextOrNew();
         Callable<V> wrap = () -> { // 封装下，将上下文传递进去
-            // ContextUtils.set(passCtx);
+            CurContextUtils.set(passCtx);
             return callable.call();
         };
         return pool.submit(wrap);
@@ -89,9 +91,9 @@ public class ThreadUtils {
     public static ScheduledFuture<?> delayExecute(ScheduledThreadPoolExecutor pool, int delayMs, Runnable runnable) {
         AssertUtils.notNull(pool, "用于执行任务的线程池不能为空");
         AssertUtils.notNull(runnable, "要执行的任务不能为空");
-        // Context passCtx = getContextOrNew();
+        CurContext passCtx = getContextOrNew();
         Runnable wrap = () -> { // 封装下，将上下文传递进去
-            // ContextUtils.set(passCtx);
+            CurContextUtils.set(passCtx);
             runnable.run();
         };
         return pool.schedule(wrap, delayMs, TimeUnit.MILLISECONDS);
@@ -105,15 +107,15 @@ public class ThreadUtils {
         return IO_POOL;
     }
 
-    // // 获取上下文，没有则创建个新的
-    // private static Context getContextOrNew() {
-    //     Context ctx = ContextUtils.get();
-    //     if (ctx != null)
-    //         return ctx;
-    //     // 单元测试时，可能会为空
-    //     log.warn("Context 为空");
-    //     return new Context();
-    // }
+    // 获取上下文，没有则创建个新的
+    private static CurContext getContextOrNew() {
+        CurContext ctx = CurContextUtils.get();
+        if (ctx != null)
+            return ctx;
+        // 单元测试时，可能会为空
+        log.warn("Context 为空");
+        return new CurContext();
+    }
 
 
     // ------------ 常量定义 ------------

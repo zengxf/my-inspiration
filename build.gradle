@@ -20,7 +20,8 @@ repositories {
 ext {
     springBootVersion = "3.4.4"
     springKafkaVersion = "3.3.3"
-    hutoolVersion = "5.8.32"
+    hutoolVersion = "5.8.44"
+    feignVersion = "13.1"
     junitVersion = "4.13.2"
     mockitoVersion = "5.14.1"
 }
@@ -32,6 +33,7 @@ dependencies {
     implementation group: "org.springframework.boot", name: "spring-boot-starter-web", version: "${springBootVersion}"
     implementation group: "org.springframework.boot", name: "spring-boot-starter-validation", version: "${springBootVersion}"
     implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: "${springKafkaVersion}"
+    implementation group: 'io.github.openfeign', name: 'feign-core', version: "${feignVersion}"
 
     // HuTool
     implementation group: "cn.hutool", name: "hutool-core", version: "${hutoolVersion}"
