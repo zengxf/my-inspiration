@@ -27,6 +27,8 @@ import java.io.IOException;
 @Order(190) // 在 AuthTokenFilter 之前执行
 public class InitContextFilter extends OncePerRequestFilter {
 
+    public static final String TRACE_ID_KEY = "traceId";
+
     @PostConstruct
     public void init() {
         log.info("初始上下文过滤器 InitContextFilter 初始化成功！");
@@ -39,12 +41,12 @@ public class InitContextFilter extends OncePerRequestFilter {
         try {
             CurContext ctx = CurContextUtils.init(request);
 
-            MDC.put("traceId", ctx.getTraceId());       // 日志链路
+            MDC.put(TRACE_ID_KEY, ctx.getTraceId());    // 日志链路
 
             filterChain.doFilter(request, response);
         } finally {
-            CurContextUtils.clear();   // 防止线程池复用串数据
-            MDC.clear();            // 防止 MDC 串日志
+            CurContextUtils.clear();    // 防止线程池复用串数据
+            MDC.clear();                // 防止 MDC 串日志
         }
     }
 
