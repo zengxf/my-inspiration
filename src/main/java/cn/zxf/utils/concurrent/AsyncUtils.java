@@ -42,15 +42,18 @@ public class AsyncUtils {
      * 等待所有子任务完成
      */
     public static void joinAll() {
-        futuresTL.get()
-                .forEach(taskFuture -> {
-                            try {
-                                taskFuture.get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                throw new RuntimeException("异步处理出错", e);
-                            }
-                        }
-                );
+        try {
+            List<Future<?>> futures = futuresTL.get();
+            futures.forEach(taskFuture -> {
+                try {
+                    taskFuture.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException("异步处理出错", e);
+                }
+            });
+        } finally {
+            futuresTL.remove();
+        }
     }
 
 }
