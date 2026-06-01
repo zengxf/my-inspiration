@@ -12,8 +12,7 @@ import java.util.concurrent.Future;
  *
  * <p>
  * 注：<br/>
- * 1. 优化的代码片段没有上下文逻辑关联； <br/>
- * 2. 需要调用 {@link #joinAll()} 等待所有子任务完成。
+ * 1. 需要调用 {@link #joinAll()} 等待所有子任务完成。
  * </p>
  * <br/>
  * ZXF 创建于 2025/4/24
