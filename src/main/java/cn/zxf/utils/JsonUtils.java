@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Json 工具类 (基于 Jackson)
@@ -45,6 +46,19 @@ public class JsonUtils {
             return mapper.readValue(json, reference);
         } catch (IOException e) {
             log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    public static Map<String, Object> toMap(String json) {
+        if (json == null) {
+            return null;
+        }
+        try {
+            return mapper.readValue(json, new TypeReference<>() {
+            });
+        } catch (Exception e) {
+            log.error("Error converting object to Map: " + e.getMessage());
             return null;
         }
     }
