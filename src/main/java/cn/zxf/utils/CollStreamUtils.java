@@ -126,6 +126,16 @@ public class CollStreamUtils implements ErrCodeConstant {
                 .orElse(null);
     }
 
+    /*** 拿第一个 (@Nullable) */
+    public static <T> T getFirst(List<T> list) {
+        if (CollectionUtil.isEmpty(list))
+            return null;
+        return list.stream()
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+    }
+
     /*** 查找枚举 */
     public static <T extends Enum> T ofEnum(Predicate<T> predicate, String notExistErr, T... values) {
         return Stream.of(values)
