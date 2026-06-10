@@ -77,31 +77,19 @@ public class ResultDataBuilder<T> {
     }
 
     public static <T> ResultData<T> responseFail(String msg) {
-        return resultData(FAIL, msg, null);
+        return resultData(FAIL, msg);
     }
 
     public static <T> ResultData<T> responseFail(int code, String msg) {
-        return resultData(code, msg, null);
+        return resultData(code, msg);
     }
 
-    public static <T> ResultData<T> responseFail(int code, String msg, String traceId) {
-        ResultData<T> resp = new ResultData<>();
-        resp.code = code;
-        resp.msg = msg;
-        resp.traceId = traceId;
-        return resp;
-    }
-
-    public static <T> ResultData<T> responseFail(int code, String msg, String exceptions, String... args) {
-        return resultData(code, msg, exceptions, null, args);
+    public static <T> ResultData<T> responseFail(int code, String msg, String exceptions) {
+        return resultData(code, msg, exceptions, null);
     }
 
     public static <T> ResultData<T> responseFail(String msg, String exceptions) {
-        return resultData(FAIL, msg, exceptions, null, null);
-    }
-
-    public static <T> ResultData<T> responseFail(String msg, String exceptions, String... args) {
-        return resultData(FAIL, msg, exceptions, null, args);
+        return resultData(FAIL, msg, exceptions, null);
     }
 
     public static <T> ResultData<T> responseSuccess() {
@@ -119,28 +107,14 @@ public class ResultDataBuilder<T> {
         return resp;
     }
 
-    public static <T> ResultData<T> resultData(int code, String msg, String... args) {
-        Object[] objects = null;
-        if (args != null) {
-            objects = new Object[args.length];
-            for (int i = 0; i < args.length; i++) {
-                objects[i] = msg;
-            }
-        }
+    public static <T> ResultData<T> resultData(int code, String msg) {
         ResultData<T> resp = new ResultData<>();
         resp.code = code;
         resp.msg = msg;
         return resp;
     }
 
-    public static <T> ResultData<T> resultData(int code, String msg, String exceptions, T data, String... args) {
-        Object[] objects = null;
-        if (args != null) {
-            objects = new Object[args.length];
-            for (int i = 0; i < args.length; i++) {
-                objects[i] = args[i];
-            }
-        }
+    public static <T> ResultData<T> resultData(int code, String msg, String exceptions, T data) {
         ResultData<T> resp = new ResultData<>();
         resp.code = code;
         resp.msg = msg;
