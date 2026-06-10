@@ -53,15 +53,18 @@ public class MyExceptionHandler {
         }).orElse("{}");
         Map<String, Object> resObj = JsonUtils.toMap(resStr);
 
-        String errMsg = StrUtil.toStringOrEmpty(resObj.get(ResultData.MSG_KEY));
-        if (StrUtil.isEmpty(errMsg)) {
-            errMsg = "系统繁忙，请稍后再试！";
+        String errMsg = "系统繁忙，请稍后再试！";
+        if (resObj != null) {
+            String msg = StrUtil.toStringOrEmpty(resObj.get(ResultData.MSG_KEY));
+            if (StrUtil.isNotEmpty(msg)) {
+                errMsg = msg;
+            }
         }
 
         Map<String, Object> data = Map.of(
                 "debug-err-msg", "请求下游服务出错",
                 "debug-err-target-url", url,
-                "debug-err-feign-res-str", resStr,
+                "debug-err-feign-res", resObj == null ? resStr : resObj,
                 "debug-err-stack-trace", ExceptionUtils.getStackTrace(e),
                 "path", req.getRequestURL()
         );
