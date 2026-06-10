@@ -88,6 +88,13 @@ public class CollStreamUtilsTest {
     }
 
     @Test
+    public void getFirst() {
+        List<UserVo> list = UserVo.ofList3();
+        UserVo first = CollStreamUtils.getFirst(list);
+        log.info("first: [{}]", first);
+    }
+
+    @Test
     public void ofEnum() {
         String target = "10";
         Type one = CollStreamUtils.ofEnum(v -> v.key.equals(target), "未找到", Type.values());
