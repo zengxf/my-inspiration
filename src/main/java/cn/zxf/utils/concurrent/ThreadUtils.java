@@ -124,7 +124,7 @@ public class ThreadUtils {
 
     // 获取上下文，没有则创建个新的
     private static CurContext getContextOrNew() {
-        CurContext ctx = CurContextUtils.get();
+        CurContext ctx = CurContextUtils.getOrNull();
         if (ctx != null)
             return ctx;
         // 单元测试时，可能会为空

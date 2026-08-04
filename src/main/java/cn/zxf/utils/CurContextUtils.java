@@ -25,6 +25,11 @@ public class CurContextUtils {
         return LOCAL.get();
     }
 
+    public static CurContext getOrDef() {
+        CurContext ctx = LOCAL.get();
+        return ctx == null ? new CurContext() : ctx;
+    }
+
     public static void set(CurContext ctx) {
         LOCAL.set(ctx);
     }
