@@ -2,10 +2,12 @@ package cn.zxf.utils.concurrent;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.zxf.common.constants.CommonConstant;
 import cn.zxf.spring.model.CurContext;
 import cn.zxf.utils.AssertUtils;
 import cn.zxf.utils.CurContextUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 
 import java.util.concurrent.*;
 
@@ -35,6 +37,7 @@ public class ThreadUtils {
         CurContext passCtx = getContextOrNew();
         Runnable wrap = () -> { // 封装下，将上下文传递进去
             CurContextUtils.set(passCtx);
+            MDC.put(CommonConstant.TRACE_ID_KEY, passCtx.getTraceId());
             runnable.run();
         };
         return defPool().submit(wrap);
@@ -52,6 +55,7 @@ public class ThreadUtils {
         CurContext passCtx = getContextOrNew();
         Runnable wrap = () -> { // 封装下，将上下文传递进去
             CurContextUtils.set(passCtx);
+            MDC.put(CommonConstant.TRACE_ID_KEY, passCtx.getTraceId());
             runnable.run();
         };
         pool.execute(wrap);
@@ -69,6 +73,7 @@ public class ThreadUtils {
         CurContext passCtx = getContextOrNew();
         Callable<V> wrap = () -> { // 封装下，将上下文传递进去
             CurContextUtils.set(passCtx);
+            MDC.put(CommonConstant.TRACE_ID_KEY, passCtx.getTraceId());
             return callable.call();
         };
         return pool.submit(wrap);
@@ -94,9 +99,19 @@ public class ThreadUtils {
         CurContext passCtx = getContextOrNew();
         Runnable wrap = () -> { // 封装下，将上下文传递进去
             CurContextUtils.set(passCtx);
+            MDC.put(CommonConstant.TRACE_ID_KEY, passCtx.getTraceId());
             runnable.run();
         };
         return pool.schedule(wrap, delayMs, TimeUnit.MILLISECONDS);
+    }
+
+
+    // ------------ 安全退出 ------------
+
+    /*** 关闭线程池 */
+    public static void shutdown() {
+        shutdownPool(IO_POOL, "默认 IO 类型线程池");
+        shutdownPool(DELAY_POOL, "默认延迟任务线程池");
     }
 
 
@@ -117,6 +132,33 @@ public class ThreadUtils {
         return new CurContext();
     }
 
+    private static void shutdownPool(ExecutorService pool, String poolName) {
+        if (pool == null || pool.isShutdown()) {
+            return;
+        }
+
+        int timeout = 30;
+        if (pool instanceof ScheduledThreadPoolExecutor) {
+            timeout = 60;
+        }
+
+        pool.shutdown();
+        try {
+            if (!pool.awaitTermination(timeout, TimeUnit.SECONDS)) {
+                log.warn("{} 未能在 {} 内正常关闭，强制中断", poolName, 5);
+                pool.shutdownNow();
+                if (!pool.awaitTermination(5, TimeUnit.SECONDS)) {
+                    log.error("{} 强制关闭失败", poolName);
+                }
+            } else {
+                log.info("{} 已正常关闭", poolName);
+            }
+        } catch (InterruptedException e) {
+            log.warn("{} 关闭被中断，强制中断", poolName);
+            pool.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
 
     // ------------ 常量定义 ------------
 
